@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "webchat"
+version = "0.1.0"
+description = ""
+authors = ["Biongar <mixailis5050@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+uvicorn = "^0.23.1"
+fastapi = {extras = ["all"], version = "^0.100.0"}
+alembic = "^1.11.1"
+python-dotenv = "^1.0.0"
+psycopg2-binary = "^2.9.6"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.4.1"
+pytest = "^7.4.0"
+black = "^23.7.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

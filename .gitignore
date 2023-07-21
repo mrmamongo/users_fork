@@ -1,0 +1,9 @@
+.venv/
+venv/
+
+migrations/versions/*
+!migrations/versions/.gitkeep
+
+*__pycache__
+
+.env
