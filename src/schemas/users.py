@@ -2,13 +2,13 @@ from datetime import datetime
 
 from fastapi import status
 from fastapi.exceptions import HTTPException
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, EmailStr, validator
 
 
 class UserRead(BaseModel):
     id: int
     username: str
-    email: str
+    email: EmailStr
     is_active: bool
     created_at: datetime
     last_login: datetime | None
@@ -16,7 +16,7 @@ class UserRead(BaseModel):
 
 class UserCreate(BaseModel):
     username: str
-    email: str
+    email: EmailStr
     password: str
     re_password: str
 
