@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from sqlalchemy import delete, insert, select
+from sqlalchemy import insert, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -40,24 +40,23 @@ class SQLAlchemyRepository(BaseRepository):
         with self.session() as session:
             query = select(self.model)
             result = session.scalars(query).all()
-            return result
+        
+        return result
 
     def get_by_id(self, id: int):
         with self.session() as session:
             return self.get_object_or_404(session, id)
 
-    def create(self, values: dict[str, str | int | bool]) -> int:
+    def create(self, values: dict[str, str | int | bool]):
         with self.session() as session:
             try:
-                stmt = insert(self.model).values(values)
-                result = session.execute(stmt)
+                stmt = insert(self.model).values(values).returning(self.model)
+                result = session.execute(stmt).one()[0]
             except IntegrityError as error:
                 table_name = error.orig.diag.table_name
                 column_name = error.orig.diag.constraint_name[len(table_name) + 1 : -4]
                 raise UniqueConstraintError(column_name)
-            session.commit()
-
-        return result.inserted_primary_key[0]
+        return result
 
     def update(self, id: int, values: dict[str, str | int | bool]):
         with self.session() as session:
@@ -67,11 +66,9 @@ class SQLAlchemyRepository(BaseRepository):
         with self.session() as session:
             instance = self.get_object_or_404(session, id)
             session.delete(instance)
-            session.commit()
 
     def get_object_or_404(self, session: Session, id: int):
-        query = select(self.model).where(id == self.model.id)
-        instance = session.scalar(query)
+        instance = session.get(self.model, id)
         if not instance:
             raise HTTPNotFound
         return instance

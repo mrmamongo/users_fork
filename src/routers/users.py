@@ -18,7 +18,7 @@ def get_user(id: int) -> UserRead:
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(user: UserCreate) -> int:
+def create_user(user: UserCreate) -> UserRead:
     return UserService().create(user)
 
 

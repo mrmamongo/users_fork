@@ -21,10 +21,17 @@ DATABASE_URL = DATABASE_URL.format(
 engine = create_engine(DATABASE_URL, echo=DEBUG)
 
 
-Session = sessionmaker(engine)
+Session = sessionmaker(engine, expire_on_commit=False)
 
 
 @contextmanager
 def get_session():
-    with Session() as session:
+    session = Session()
+    try:
         yield session
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
