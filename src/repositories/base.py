@@ -10,23 +10,23 @@ from src.exceptions.base import HTTPNotFound, UniqueConstraintError
 
 class BaseRepository(ABC):
     @abstractmethod
-    def get_all():
+    def get_all(self):
         pass
 
     @abstractmethod
-    def get_by_id(id: int):
+    def get_by_id(self, id: int):
         pass
 
     @abstractmethod
-    def create():
+    def create(self):
         pass
 
     @abstractmethod
-    def update():
+    def update(self):
         pass
 
     @abstractmethod
-    def delete():
+    def delete(self):
         pass
 
 
