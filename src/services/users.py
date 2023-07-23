@@ -3,6 +3,8 @@ import bcrypt
 from src.repositories.users import UserRepository
 from src.schemas.users import UserCreate, UserRead
 
+from .emails import VerificationEmailSender
+
 
 def make_password(password):
     salt = bcrypt.gensalt()
@@ -18,4 +20,6 @@ class UserService:
     def create(self, schema: UserCreate) -> UserRead:
         values = schema.model_dump(exclude_none=True)
         values["password"] = make_password(values["password"])
-        return UserRepository().create(values)
+        user = UserRepository().create(values)
+        VerificationEmailSender(user.email).send_email()
+        return user
