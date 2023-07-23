@@ -32,7 +32,8 @@ python main.py
 - [ ] Сообщения/вебчат
 - [ ] Тесты
 - [ ] Типизация
+- [x] Отправка Email
 - [ ] Подтверждение Email
-- [ ] Celery
+- [ ] Celery & Flower
 - [ ] Redis
 - [ ] CI/CD
