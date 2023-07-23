@@ -1,7 +1,8 @@
 import bcrypt
 
 from src.repositories.users import UserRepository
-from src.schemas.users import UserCreate, UserRead
+from src.schemas.users import UserCreate, UserRead, PasswordUpdate
+from src.exceptions.base import WrongOldPassword
 
 from .emails import VerificationEmailSender
 
@@ -23,3 +24,13 @@ class UserService:
         user = UserRepository().create(values)
         VerificationEmailSender(user.email).send_email()
         return user
+
+    def change_password(self, id: int, schema: PasswordUpdate) -> None:
+        values = schema.model_dump(exclude_none=True)
+        user = UserRepository().get_by_id(id)
+
+        if verify_password(user.password, values["old_password"]):
+            password = make_password(values["password"])
+            return UserRepository().change_password(id, password)
+
+        raise WrongOldPassword

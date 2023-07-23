@@ -5,6 +5,23 @@ from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, EmailStr, validator
 
 
+class PasswordUpdate(BaseModel):
+    old_password: str
+    password: str
+    re_password: str
+
+    @validator("re_password")
+    def passwords_match(cls, password, values):
+        if password != values["password"]:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Пароли не совпадают",
+            )
+
+class UserUpdate(BaseModel):
+    pass
+
+
 class UserRead(BaseModel):
     id: int
     username: str
